@@ -47,13 +47,13 @@ namespace ImGui
         }
 
         if (s[2] == 'm') {
-            *col = 0xffcccccc;
+            *col = 0xffffffff;
             *skipChars = 3;
             return true;
         }
 
         if (s[2] == '0' && s[3] == 'm') {
-            *col = 0xffcccccc;
+            *col = 0xffffffff;
             *skipChars = 4;
             return true;
         }
@@ -76,24 +76,38 @@ namespace ImGui
 #else
         for (const std::string& el : jet::split(seq, ";")) {
 #endif
-            if (el[0] == '3' && el.size() == 2) {
+            if ((el[0] == '3' || el[0] == '9') && el.size() == 2) {
                 colorStr = el;
                 break;
             }
         }
-
+        // colors from Windows Console under https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
         if (!colorStr.empty()) {
-            switch (colorStr[1]) {
-            case '0': *col = 0xffcccccc; break;
-            case '1': *col = 0xff7a77f2; break;
-            case '2': *col = 0xff99cc99; break;
-            case '3': *col = 0xff66ccff; break;
-            case '4': *col = 0xffcc9966; break;
-            case '5': *col = 0xffcc99cc; break;
-            case '6': *col = 0xffcccc66; break;
-            case '7': *col = 0xff2d2d2d; break;
-            default: return false;
+            if (colorStr[0] == '3') {
+                switch (colorStr[1]) {
+                case '0': *col = 0xff000000; break; // black
+                case '1': *col = 0xff000080; break; // red
+                case '2': *col = 0xff008000; break; // green
+                case '3': *col = 0xff008080; break; // yellow
+                case '4': *col = 0xff800000; break; // blue
+                case '5': *col = 0xff800080; break; // magenta
+                case '6': *col = 0xff808000; break; // cyan
+                case '7': *col = 0xffc0c0c0; break; // white (light gray)
+                default: return false;
+                }
+            } else {
+                switch (colorStr[1]) {
+                    case '0': *col = 0xff808080; break; // gray
+                    case '1': *col = 0xff0000ff; break; // bright red
+                    case '2': *col = 0xff00ff00; break; // bright green
+                    case '3': *col = 0xff00ffff; break; // bright yellow
+                    case '4': *col = 0xffff0000; break; // bright blue
+                    case '5': *col = 0xffff00ff; break; // bright magenta
+                    case '6': *col = 0xffffff00; break; // bright cyan
+                    case '7': *col = 0xffffffff; break; // bright white
+                }
             }
+
         }
 
         *skipChars = static_cast<int>(seqEnd - s + 1);

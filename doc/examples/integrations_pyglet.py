@@ -39,7 +39,7 @@ def main():
         imgui.text_colored("Eggs", 0.2, 1., 0.)
         
         imgui.text_ansi("B\033[31marA\033[mnsi ")
-        imgui.text_ansi_colored("Eg\033[31mgAn\033[msi ", 0.2, 1., 0.)
+        imgui.text_ansi_colored("Eg\033[30mgAn\033[msi ", 0.2, 1., 0.)
 
         imgui.end()
 
